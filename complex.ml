@@ -1,4 +1,3 @@
-Dont mind me
 (* ========================================================================= *)
 (* Complex quantifier elimination (by simple divisibility a la Tarski).      *)
 (*                                                                           *)

@@ -1,4 +1,3 @@
-Dont mind me
 (* ========================================================================= *)
 (* Simple implementation of Stalmarck's algorithm.                           *)
 (*                                                                           *)

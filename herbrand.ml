@@ -1,4 +1,3 @@
-Dont mind me
 (* ========================================================================= *)
 (* Relation between FOL and propositonal logic; Herbrand theorem.            *)
 (*                                                                           *)

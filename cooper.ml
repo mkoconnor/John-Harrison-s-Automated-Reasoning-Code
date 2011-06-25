@@ -1,4 +1,3 @@
-Dont mind me
 (* ========================================================================= *)
 (* Cooper's algorithm for Presburger arithmetic.                             *)
 (*                                                                           *)

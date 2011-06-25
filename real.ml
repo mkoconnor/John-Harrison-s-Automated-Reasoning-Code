@@ -1,4 +1,3 @@
-Dont mind me
 (* ========================================================================= *)
 (* Real quantifier elimination (using Cohen-Hormander algorithm).            *)
 (*                                                                           *)

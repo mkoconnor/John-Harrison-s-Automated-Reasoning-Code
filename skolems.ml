@@ -1,4 +1,3 @@
-Dont mind me
 (* ========================================================================= *)
 (* Illustration of Skolemizing a set of formulas                             *)
 (*                                                                           *)

@@ -1,4 +1,3 @@
-Dont mind me
 (* ========================================================================= *)
 (* Binary decision diagrams (BDDs) using complement edges.                   *)
 (*                                                                           *)

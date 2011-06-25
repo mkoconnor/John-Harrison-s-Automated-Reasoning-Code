@@ -1,4 +1,3 @@
-Dont mind me
 (* ========================================================================= *)
 (* Initialize theorem proving example code.                                  *)
 (*                                                                           *)

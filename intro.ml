@@ -1,4 +1,3 @@
-Dont mind me
 (* ========================================================================= *)
 (* Simple algebraic expression example from the introductory chapter.        *)
 (*                                                                           *)

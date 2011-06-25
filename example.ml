@@ -1,4 +1,3 @@
-Dont mind me
 (* ========================================================================= *)
 (* Some examples illustrating how the theorem-proving code can be used.      *)
 (*                                                                           *)

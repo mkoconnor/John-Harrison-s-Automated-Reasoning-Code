@@ -1,4 +1,3 @@
-Dont mind me
 # List of ML files to compile as a library. This leaves out the following
 # which are probably not much use:
 #

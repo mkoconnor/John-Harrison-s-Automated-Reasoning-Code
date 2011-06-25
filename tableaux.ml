@@ -1,4 +1,3 @@
-Dont mind me
 (* ========================================================================= *)
 (* Tableaux, seen as an optimized version of a Prawitz-like procedure.       *)
 (*                                                                           *)
