@@ -1,3 +1,4 @@
+(* dummy commit *)
 (* ========================================================================= *)
 (* Initialize theorem proving example code.                                  *)
 (*                                                                           *)

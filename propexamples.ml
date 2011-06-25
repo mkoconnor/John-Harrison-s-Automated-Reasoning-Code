@@ -1,3 +1,4 @@
+(* dummy commit *)
 (* ========================================================================= *)
 (* Some propositional formulas to test, and functions to generate classes.   *)
 (*                                                                           *)

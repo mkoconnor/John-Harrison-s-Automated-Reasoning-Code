@@ -2,6 +2,6 @@ This is Michael O'Connor's "fork" of John Harrison's code accompanying his book
 "Handbook of Practical Logic and Automated Reasoning".  The license is the same 
 as before, see LICENSE.TXT.
 
-It has my personalizations.  Right now, the changes are: running "make top" will
+It has my personalizations. Right now, the changes are: running "make top" will
 construct a proper custom toplevel with the appropriate libraries, and those 
 libraries no longer have any side-effects when you link them in.

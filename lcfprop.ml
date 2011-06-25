@@ -1,3 +1,4 @@
+(* dummy commit *)
 (* ========================================================================= *)
 (* Propositional reasoning by derived rules atop the LCF core.               *)
 (*                                                                           *)

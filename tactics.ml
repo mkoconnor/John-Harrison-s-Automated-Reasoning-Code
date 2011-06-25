@@ -1,3 +1,4 @@
+(* dummy commit *)
 (* ========================================================================= *)
 (* Goals, LCF-like tactics and Mizar-like proofs.                            *)
 (*                                                                           *)
