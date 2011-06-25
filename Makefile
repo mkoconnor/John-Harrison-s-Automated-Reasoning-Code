@@ -23,6 +23,9 @@ MLFILES = initialization.ml lib.ml intro.ml formulas.ml prop.ml propexamples.ml 
           combining.ml lcf.ml lcfprop.ml folderived.ml lcffol.ml        \
           tactics.ml limitations.ml
 
+toplevel : atp_batch.cmo Quotexpander.cmo
+	ocamlmktop -o toplevel -I +camlp5 camlp5o.cma Quotexpander.cmo nums.cma atp_batch.cmo 	
+
 # The default is an interactive session skipping the examples.
 
 interactive: atp_interactive.ml init.ml; echo '#use "init.ml";;' >.ocamlinit; (sleep 3s; rm -f .ocamlinit) & ocaml
@@ -72,4 +75,4 @@ atp_batch.ml: $(MLFILES); ./Mk_ml_file $(MLFILES) | grep -v install_printer >atp
 
 # Clean up
 
-clean:; -rm -f atp_batch.cma atp_batch.cmi atp_batch.cmo atp_batch.cmx atp_batch.o atp_batch.ml example example.exe example.cmi example.cmo example.cmx example.o Quotexpander.cmo Quotexpander.cmi atp_interactive.ml .ocamlinit
+clean:; -rm -f atp_batch.cma atp_batch.cmi atp_batch.cmo atp_batch.cmx atp_batch.o atp_batch.ml example example.exe example.cmi example.cmo example.cmx example.o Quotexpander.cmo Quotexpander.cmi atp_interactive.ml .ocamlinit toplevel
