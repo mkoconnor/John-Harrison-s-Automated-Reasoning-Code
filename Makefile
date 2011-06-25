@@ -25,13 +25,24 @@ MLFILES = initialization.ml lib.ml intro.ml formulas.ml prop.ml propexamples.ml 
           tactics.ml limitations.ml
 
 TOPLEVEL = top
+PRETOPLEVEL = $(addsuffix .pre, $(TOPLEVEL))
+PREOCAMLINIT = ocamlinit
 
-.ocamlinit : install_printers.ml
-	echo "include Atp_batch;;" > .ocamlinit
-	cat install_printers.ml >> .ocamlinit
+$(PREOCAMLINIT) : install_printers.ml
+	echo "include Atp_batch;;" > $(PREOCAMLINIT)
+	cat install_printers.ml >> $(PREOCAMLINIT)
 
-$(TOPLEVEL) : atp_batch.cmo Quotexpander.cmo .ocamlinit
-	ocamlmktop -o $(TOPLEVEL) -I +camlp5 camlp5o.cma Quotexpander.cmo nums.cma atp_batch.cmo 	
+$(PRETOPLEVEL) : atp_batch.cmo Quotexpander.cmo 
+	ocamlmktop -o $(PRETOPLEVEL) -I +camlp5 camlp5o.cma Quotexpander.cmo nums.cma atp_batch.cmo 	
+
+mktopml : mktopml.ml 
+	ocamlc -o mktopml mktopml.ml
+
+top.ml : mktopml mktop.ml $(PREOCAMLINIT) $(PRETOPLEVEL)
+	./mktopml ./top.ml $(PRETOPLEVEL) $(PREOCAMLINIT) ./mktop.ml
+
+$(TOPLEVEL) : top.ml
+	ocamlopt -o $(TOPLEVEL) unix.cmxa top.ml
 
 # The default is an interactive session skipping the examples.
 
