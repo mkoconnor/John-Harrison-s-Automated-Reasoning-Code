@@ -117,8 +117,9 @@ END_INTERACTIVE;;
 (* Quine from Martin Jambon.                                                 *)
 (* ------------------------------------------------------------------------- *)
 
-(fun s -> Printf.printf "%s\n%S\n" s s)
-"(fun s -> Printf.printf \"%s\\n%S\\n\" s s)";;
+let quine () = 
+  (fun s -> Printf.printf "%s\n%S\n" s s)
+    "(fun s -> Printf.printf \"%s\\n%S\\n\" s s)";;
 
 (* ------------------------------------------------------------------------- *)
 (* Diagonalization and quasi-diagonalization of formulas.                    *)
