@@ -456,7 +456,7 @@ let robinson_consequences =
    (forall m n. m < S(n) ==> m <= n) /\
    (forall n. n < 0 ==> false)>>;;
 
-let robinson_thm =
+let robinson_thm = lazy (
   prove (Imp(robinson,robinson_consequences))
   [note("eq_refl",<<forall x. x = x>>) using [axiom_eqrefl (Var "x")];
    note("eq_trans",<<forall x y z. x = y ==> y = z ==> x = z>>)
@@ -538,12 +538,21 @@ let robinson_thm =
    so consider("d",<<S(n) + d = 0>>) by ["le_def"];
    so have <<S(n + d) = 0>> by ["add_suc"; "eq_trans"; "eq_sym"];
    so our thesis by ["not_suc_0"];
-   qed];;
+   qed]
+);;
 
 let [suc_0_l; suc_0_r; suc_inj_false;
      expand_le; expand_lt; expand_nle; expand_nlt;
      num_lecases; le_0; le_suc; lt_suc; lt_0] =
-    map (imp_trans robinson_thm) (conjths robinson_consequences);;
+  let l = lazy (
+    map (imp_trans (Lazy.force robinson_thm)) (conjths robinson_consequences)
+  )
+  in
+  let module Array = StdLabels.Array in
+  let module List = StdLabels.List in
+  Array.to_list (Array.init 12 ~f:(fun i -> 
+    lazy (List.nth (Lazy.force l) i)
+  ))
 
 (* ------------------------------------------------------------------------- *)
 (* Prove or disprove equations between ground terms.                         *)
@@ -555,10 +564,10 @@ let rob_eq s t =
 
 let rec rob_nen(s,t) =
   match (s,t) with
-      (Fn("S",[s']),Fn("0",[])) -> right_spec s' suc_0_l
-    | (Fn("0",[]),Fn("S",[t'])) -> right_spec t' suc_0_r
+      (Fn("S",[s']),Fn("0",[])) -> right_spec s' (Lazy.force suc_0_l)
+    | (Fn("0",[]),Fn("S",[t'])) -> right_spec t' (Lazy.force suc_0_r)
     | (Fn("S",[u]),Fn("S",[v])) ->
-        right_mp (itlist right_spec [v;u] suc_inj_false) (rob_nen(u,v))
+        right_mp (itlist right_spec [v;u] (Lazy.force suc_inj_false)) (rob_nen(u,v))
     | _ -> failwith "rob_ne: true equation or unexpected term";;
 
 let rob_ne s t =
@@ -605,10 +614,10 @@ let elim_bex fm =
 
 let sigma_elim fm =
   match fm with
-    Atom(R("<=",[s;t])) -> itlist right_spec [t;s] expand_le
-  | Atom(R("<",[s;t])) -> itlist right_spec [t;s] expand_lt
-  | Imp(Atom(R("<=",[s;t])),False) -> itlist right_spec [t;s] expand_nle
-  | Imp(Atom(R("<",[s;t])),False) -> itlist right_spec [t;s] expand_nlt
+    Atom(R("<=",[s;t])) -> itlist right_spec [t;s] (Lazy.force expand_le)
+  | Atom(R("<",[s;t])) -> itlist right_spec [t;s] (Lazy.force expand_lt)
+  | Imp(Atom(R("<=",[s;t])),False) -> itlist right_spec [t;s] (Lazy.force expand_nle)
+  | Imp(Atom(R("<",[s;t])),False) -> itlist right_spec [t;s] (Lazy.force expand_nlt)
   | Imp(Exists(x,And(p,q)),False) -> add_assum robinson (elim_bex fm)
   | _ -> add_assum robinson (introduce_connective fm);;
 
@@ -622,7 +631,7 @@ let boundquant_step th0 th1 =
   match concl th0,concl th1 with
     Imp(_,Forall(x,Imp(_,p))),
           Imp(_,Forall(_,Imp(Atom(R("<=",[_;t])),_))) ->
-      let th2 = itlist right_spec [t;Var x] le_suc in
+      let th2 = itlist right_spec [t;Var x] (Lazy.force le_suc) in
       let th3 = right_imp_trans th2 (right_spec (Var x) th1) in
       let y = variant "y" (var(concl th1)) in
       let q = Imp(Atom(R("<=",[Var x; Fn("S",[t])])),p) in
@@ -632,7 +641,7 @@ let boundquant_step th0 th1 =
       let th6 = spec (Var x) (gen y th5) in
       let th7 = imp_insert (antecedent q) (right_spec (Var x) th0) in
       let th8 = ante_disj (imp_front 2 th7) th6 in
-      let th9 = right_spec (Var x) num_lecases in
+      let th9 = right_spec (Var x) (Lazy.force num_lecases) in
       let a1 = consequent(concl th9) and a2 = antecedent(concl th8) in
       let tha = modusponens (isubst zero zero a1 a2)
                             (axiom_eqrefl zero) in
@@ -688,9 +697,9 @@ and bounded_prove(a,x,t,q) =
 and boundednum_prove(a,x,t,q) =
   match a,t with
     "<",Fn("0",[]) ->
-        gen_right x (imp_trans2 (right_spec (Var x) lt_0) (ex_falso q))
+        gen_right x (imp_trans2 (right_spec (Var x) (Lazy.force lt_0)) (ex_falso q))
   | "<",Fn("S",[u]) ->
-        let th1 = itlist right_spec [u;Var x] lt_suc in
+        let th1 = itlist right_spec [u;Var x] (Lazy.force lt_suc) in
         let th2 = boundednum_prove("<=",x,u,q) in
         let th3 = imp_trans2 th1 (imp_swap(right_spec (Var x) th2)) in
         gen_right x (imp_unduplicate(imp_front 2 th3))
@@ -698,7 +707,7 @@ and boundednum_prove(a,x,t,q) =
         let q' = subst (x |=> zero) q in
         let th1 = imp_trans (eq_sym (Var x) zero)
                             (isubst zero (Var x) q' q) in
-        let th2 = imp_trans2 (right_spec (Var x) le_0) th1 in
+        let th2 = imp_trans2 (right_spec (Var x) (Lazy.force le_0)) th1 in
         let th3 = imp_swap(imp_front 2 th2) in
         gen_right x (right_mp th3 (sigma_prove q'))
   | "<=",Fn("S",[u]) ->
