@@ -21,7 +21,7 @@ let () =
     | 0 -> 				(* child *)
       Unix.execv temp_top (
 	Array.append [|temp_top|]
-	  (Array.append [|"-init"; temp_init|]
+	  (Array.append [|"-init"; temp_init; "-I"; include_path|]
 	     (Array.sub Sys.argv ~pos:1 ~len:(Array.length Sys.argv - 1))
 	  )
       )

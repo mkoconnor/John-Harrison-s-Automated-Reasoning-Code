@@ -33,13 +33,13 @@ $(PREOCAMLINIT) : install_printers.ml
 	cat install_printers.ml >> $(PREOCAMLINIT)
 
 $(PRETOPLEVEL) : atp_batch.cmo Quotexpander.cmo 
-	ocamlmktop -o $(PRETOPLEVEL) -I +camlp5 camlp5o.cma Quotexpander.cmo nums.cma atp_batch.cmo 	
+	ocamlmktop -o $(PRETOPLEVEL) -I +camlp5 camlp5o.cma Quotexpander.cmo nums.cma atp_batch.cmo
 
 mktopml : mktopml.ml 
 	ocamlc -o mktopml mktopml.ml
 
 top.ml : mktopml mktop.ml $(PREOCAMLINIT) $(PRETOPLEVEL)
-	./mktopml ./top.ml $(PRETOPLEVEL) $(PREOCAMLINIT) ./mktop.ml
+	./mktopml ./top.ml $(PRETOPLEVEL) $(PREOCAMLINIT) ./mktop.ml $(abspath .)
 
 $(TOPLEVEL) : top.ml
 	ocamlopt -o $(TOPLEVEL) unix.cmxa top.ml

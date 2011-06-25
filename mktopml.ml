@@ -16,18 +16,27 @@ let write = write_gen ~f:(fun s -> s)
 
 let () = 
   match Sys.argv with
-    | [|_program;output_file;toplevel;ocamlinit;mktop_ml|] ->
+    | [|_program;output_file;toplevel;ocamlinit;mktop_ml;include_path|] ->
       let oc = open_out output_file in
-      output_string oc "let top = \"";
-      let top_ic = open_in toplevel in
-      write_escaped oc top_ic;
-      close_in top_ic;
-      output_string oc "\";;\n\n";
-      output_string oc "let init = \"";
-      let init_ic = open_in ocamlinit in
-      write_escaped oc init_ic;
-      close_in init_ic;
-      output_string oc "\";;\n\n";
+      let define_var var ~write_escaped = 
+	output_string oc "let ";
+	output_string oc var;
+	output_string oc " = \"";
+	write_escaped oc;
+	output_string oc "\";;\n\n"
+      in
+      let define_var_escaped var ~file = 
+	define_var var ~write_escaped:(fun oc ->
+	  let ic = open_in file in
+	  write_escaped oc ic;
+	  close_in ic
+	)
+      in
+      define_var_escaped "top" toplevel;
+      define_var_escaped "init" ocamlinit;
+      define_var "include_path" ~write_escaped:(fun oc ->
+	output_string oc (String.escaped include_path)
+      );
       let mktop_ml_ic = open_in mktop_ml in
       write oc mktop_ml_ic;
       close_in mktop_ml_ic;
