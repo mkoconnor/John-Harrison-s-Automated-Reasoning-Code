@@ -25,7 +25,11 @@ MLFILES = initialization.ml lib.ml intro.ml formulas.ml prop.ml propexamples.ml 
 
 TOPLEVEL = top
 
-$(TOPLEVEL) : atp_batch.cmo Quotexpander.cmo
+.ocamlinit : install_printers.ml
+	echo "include Atp_batch;;" > .ocamlinit
+	cat install_printers.ml >> .ocamlinit
+
+$(TOPLEVEL) : atp_batch.cmo Quotexpander.cmo .ocamlinit
 	ocamlmktop -o $(TOPLEVEL) -I +camlp5 camlp5o.cma Quotexpander.cmo nums.cma atp_batch.cmo 	
 
 # The default is an interactive session skipping the examples.
@@ -74,6 +78,9 @@ Quotexpander.cmo: Quotexpander.ml; if ${USE_CAMLP5};                            
 atp_interactive.ml: $(MLFILES); ./Mk_ml_file $(MLFILES) >atp_interactive.ml
 
 atp_batch.ml: $(MLFILES); ./Mk_ml_file $(MLFILES) | grep -v install_printer >atp_batch.ml
+
+install_printers.ml: $(MLFILES)
+	./Mk_ml_file $(MLFILES) | grep install_printer > install_printers.ml
 
 # Clean up
 
