@@ -1,3 +1,4 @@
+Dont mind me
 (* ========================================================================= *)
 (* Introduction to quantifier elimination.                                   *)
 (*                                                                           *)
